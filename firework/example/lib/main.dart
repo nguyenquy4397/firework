@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firework/firework.dart';
 import 'package:flutter/material.dart';
 
@@ -33,63 +31,39 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  late final FireworkController _controller = FireworkController(
-    vsync: this,
-    radius: 70,
-  )
-    ..start()
-    ..autoLaunchDuration = Duration.zero
-    ..rocketSpawnTimeout = Duration.zero;
-  final _random = Random();
-
-  void _incrementCounter() {
-    _controller.spawnRocket(
-      const Point(100, 100),
-      forceSpawn: true,
-    );
-    _controller.spawnRocket(
-      Point(_controller.windowSize.width - 10,
-          _controller.windowSize.width / 2 - 25),
-      forceSpawn: true,
-    );
-    _controller.spawnRocket(
-      Point(50, _controller.windowSize.height / 2),
-      forceSpawn: true,
-    );
-    _controller.spawnRocket(
-      Point(_controller.windowSize.width / 2,
-          3 * _controller.windowSize.height / 4),
-      forceSpawn: true,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _MyHomePageState extends State<MyHomePage> {
+  final _controller = FireworksHaveRocketController();
+  final _noRocketController = FireworksNoRocketController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Stack(
+      body: FireworksHaveRocket(
+        controller: _controller,
+        fireworksNumber: 4,
+        child: FireworksNoRocket(
+            controller: _noRocketController,
+            fireworksNumber: 4,
+            child: Center(child: Image.asset('assets/congratulation.png'))),
+      ),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Fireworks(
-            controller: _controller,
+          FloatingActionButton(
+            onPressed: () {
+              _controller.play();
+            },
+            child: const Icon(Icons.launch),
           ),
-          Center(
-            child: Image.asset('assets/congratulation.png'),
+          FloatingActionButton(
+            onPressed: () {
+              _noRocketController.play();
+            },
+            child: const Icon(Icons.stream),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        child: const Icon(Icons.launch),
       ),
     );
   }
