@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:soundpool/soundpool.dart';
 
 import '/src/foundation/particle.dart';
 import '/src/foundation/rocket.dart';
@@ -38,6 +39,8 @@ class FireworkController implements Listenable {
   ///
   /// This has to be set by the renderer.
   Size windowSize = Size.zero;
+
+  final int multiNum = 0;
 
   /// The title of the fireworks animation that is displayed in the center
   /// of the animation.
@@ -79,13 +82,7 @@ class FireworkController implements Listenable {
   }
 
   final List<VoidCallback> _listeners;
-  final audioRocket = Audio('lib/assets/rocket.mp3');
-  final audioExploding = Audio('lib/assets/exploding.mp3');
-  final _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-
-  Future<void> _openPlayer(Audio audio) async {
-    await _assetsAudioPlayer.open(audio);
-  }
+  final Soundpool _soundPool = Soundpool.fromOptions();
 
   @override
   void addListener(listener) {
@@ -137,14 +134,19 @@ class FireworkController implements Listenable {
   FireworkRocket? _rocketToSpawn;
   Duration _lastRocketSpawn = Duration.zero;
 
+  double _nextGlobalHue() {
+    _globalHue += _random.nextDouble() * 360;
+    _globalHue %= 360;
+    return _globalHue;
+  }
+
   void _update(Duration elapsedDuration) {
     if (windowSize == Size.zero) {
       // We need to wait until we have the size.
       return;
     }
 
-    _globalHue += _random.nextDouble() * 360;
-    _globalHue %= 360;
+    _nextGlobalHue();
 
     if (autoLaunchDuration != Duration.zero &&
         elapsedDuration - _lastAutoLaunch >= autoLaunchDuration) {
@@ -224,17 +226,17 @@ class FireworkController implements Listenable {
         windowSize.height * 1.2,
       ),
       target: target,
-      hue: _globalHue,
+      hue: _nextGlobalHue(),
       size: _rocketSize,
     );
 
     if (forceSpawn) {
       rockets.add(rocket);
-      _openPlayer(audioRocket);
+      _playSound('packages/firework/assets/rocket.mp3');
       return;
     }
     _rocketToSpawn = rocket;
-    _openPlayer(audioRocket);
+    _playSound('packages/firework/assets/rocket.mp3');
   }
 
   /// How many particles will be spawned when a rocket explodes.
@@ -249,6 +251,17 @@ class FireworkController implements Listenable {
         size: particleSize,
       ));
     }
-    _openPlayer(audioExploding);
+    _playSound('packages/firework/assets/exploding.mp3');
+  }
+
+  Future<void> _playSound(String fileName) async {
+    var soundId = await _loadSound(fileName);
+    await _soundPool.setVolume(soundId: soundId, volume: 50);
+    await _soundPool.play(soundId);
+  }
+
+  Future<int> _loadSound(String fileName) async {
+    var asset = await rootBundle.load(fileName);
+    return await _soundPool.load(asset);
   }
 }

@@ -35,29 +35,34 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  int _counter = 1970;
-
   late final FireworkController _controller = FireworkController(
     vsync: this,
     radius: 70,
   )
     ..start()
-    ..autoLaunchDuration = const Duration(milliseconds: 500)
+    ..autoLaunchDuration = Duration.zero
     ..rocketSpawnTimeout = Duration.zero;
   final _random = Random();
 
   void _incrementCounter() {
     _controller.spawnRocket(
-      Point(
-        _random.nextDouble() * _controller.windowSize.width,
-        _random.nextDouble() * _controller.windowSize.height,
-      ),
+      const Point(100, 100),
       forceSpawn: true,
     );
-
-    setState(() {
-      _counter++;
-    });
+    _controller.spawnRocket(
+      Point(_controller.windowSize.width - 10,
+          _controller.windowSize.width / 2 - 25),
+      forceSpawn: true,
+    );
+    _controller.spawnRocket(
+      Point(50, _controller.windowSize.height / 2),
+      forceSpawn: true,
+    );
+    _controller.spawnRocket(
+      Point(_controller.windowSize.width / 2,
+          3 * _controller.windowSize.height / 4),
+      forceSpawn: true,
+    );
   }
 
   @override
@@ -78,25 +83,13 @@ class _MyHomePageState extends State<MyHomePage>
             controller: _controller,
           ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'You have pushed the button this many times:',
-                ),
-                Text(
-                  '$_counter',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ],
-            ),
+            child: Image.asset('assets/congratulation.png'),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.launch),
       ),
     );
   }
