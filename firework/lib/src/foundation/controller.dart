@@ -18,6 +18,7 @@ class FireworkController implements Listenable {
   FireworkController({
     required this.vsync,
     this.radius = 0,
+    this.isHaveRocket = true,
   })  : rockets = [],
         particles = [],
         _listeners = [],
@@ -35,12 +36,14 @@ class FireworkController implements Listenable {
 
   final double radius;
 
+  final bool isHaveRocket;
+
+  bool isGravity = true;
+
   /// The size of the window the fireworks are flying in.
   ///
   /// This has to be set by the renderer.
   Size windowSize = Size.zero;
-
-  final int multiNum = 0;
 
   /// The title of the fireworks animation that is displayed in the center
   /// of the animation.
@@ -147,7 +150,6 @@ class FireworkController implements Listenable {
     }
 
     _nextGlobalHue();
-
     if (autoLaunchDuration != Duration.zero &&
         elapsedDuration - _lastAutoLaunch >= autoLaunchDuration) {
       _lastAutoLaunch = elapsedDuration;
@@ -245,9 +247,23 @@ class FireworkController implements Listenable {
   void _createExplosion(FireworkRocket rocket) {
     for (var i = 0; i < explosionParticleCount; i++) {
       particles.add(FireworkParticle(
+        isGravity: isGravity,
         random: _random,
         position: rocket.position,
         hueBaseValue: rocket.hue,
+        size: particleSize,
+      ));
+    }
+    _playSound('packages/firework/assets/exploding.mp3');
+  }
+
+  void spawnExplosion(Point<double> target) {
+    for (var i = 0; i < explosionParticleCount; i++) {
+      particles.add(FireworkParticle(
+        isGravity: isGravity,
+        random: _random,
+        position: target,
+        hueBaseValue: _nextGlobalHue(),
         size: particleSize,
       ));
     }
