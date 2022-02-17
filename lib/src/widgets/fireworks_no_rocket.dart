@@ -8,13 +8,11 @@ class FireworksNoRocket extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.child,
-    this.isBackground = true,
     required this.fireworksNumber,
   }) : super(key: key);
   final FireworksNoRocketController controller;
   final int fireworksNumber;
   final Widget child;
-  final bool isBackground;
   @override
   _FireworksNoRocketState createState() => _FireworksNoRocketState();
 }
@@ -65,9 +63,8 @@ class _FireworksNoRocketState extends State<FireworksNoRocket>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (!widget.isBackground) widget.child,
         Fireworks(controller: _controller),
-        if (widget.isBackground) widget.child,
+        widget.child,
       ],
     );
   }
