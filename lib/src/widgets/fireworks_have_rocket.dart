@@ -66,9 +66,8 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (!widget.isBackground) widget.child,
         Fireworks(controller: _controller),
-        if (widget.isBackground) widget.child,
+        widget.child,
       ],
     );
   }
@@ -78,7 +77,6 @@ class FireworksHaveRocketController extends ChangeNotifier {
   FireworksHaveRocketControllerState _state =
       FireworksHaveRocketControllerState.stopped;
   FireworksHaveRocketControllerState get state => _state;
-
   void play() {
     _state = FireworksHaveRocketControllerState.playing;
     notifyListeners();

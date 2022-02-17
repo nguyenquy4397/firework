@@ -37,33 +37,49 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: FireworksHaveRocket(
+        isBackground: false,
         controller: _controller,
         fireworksNumber: 4,
-        child: FireworksNoRocket(
-            controller: _noRocketController,
-            fireworksNumber: 4,
-            child: Center(child: Image.asset('assets/congratulation.png'))),
-      ),
-      floatingActionButton: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              _controller.play();
-            },
-            child: const Icon(Icons.launch),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              _noRocketController.play();
-            },
-            child: const Icon(Icons.stream),
-          ),
-        ],
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: List.generate(
+                    20,
+                    (index) => const ListTile(
+                            title: Text(
+                          'longgggggggggggggggggggggggggggggggggg',
+                          style: TextStyle(color: Colors.black),
+                        ))),
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _controller.play();
+                  },
+                  icon: const Icon(
+                    Icons.launch,
+                    color: Colors.black,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _noRocketController.play();
+                  },
+                  icon: const Icon(Icons.stream),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

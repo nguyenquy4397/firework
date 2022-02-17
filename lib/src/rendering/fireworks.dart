@@ -176,7 +176,7 @@ class RenderFireworks extends RenderBox {
           ..color = HSVColor.fromAHSV(
                   particle.alpha, particle.hue % 360, 1, particle.brightness)
               .toColor()
-          ..blendMode = BlendMode.screen
+          ..blendMode = BlendMode.difference
           ..strokeWidth = particle.size
           ..style = PaintingStyle.stroke,
       );

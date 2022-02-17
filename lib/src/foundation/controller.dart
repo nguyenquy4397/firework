@@ -148,6 +148,7 @@ class FireworkController implements Listenable {
       // We need to wait until we have the size.
       return;
     }
+    print('update');
 
     _nextGlobalHue();
     if (autoLaunchDuration != Duration.zero &&
