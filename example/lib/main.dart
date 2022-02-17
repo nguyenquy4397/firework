@@ -42,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: FireworksHaveRocket(
-        isBackground: false,
         controller: _controller,
         fireworksNumber: 4,
         child: Column(

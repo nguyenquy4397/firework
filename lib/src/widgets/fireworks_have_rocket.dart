@@ -8,13 +8,11 @@ class FireworksHaveRocket extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.child,
-    this.isBackground = true,
     required this.fireworksNumber,
   }) : super(key: key);
   final FireworksHaveRocketController controller;
   final int fireworksNumber;
   final Widget child;
-  final bool isBackground;
   @override
   _FireworksHaveRocketState createState() => _FireworksHaveRocketState();
 }

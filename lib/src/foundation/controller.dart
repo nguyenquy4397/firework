@@ -148,8 +148,6 @@ class FireworkController implements Listenable {
       // We need to wait until we have the size.
       return;
     }
-    print('update');
-
     _nextGlobalHue();
     if (autoLaunchDuration != Duration.zero &&
         elapsedDuration - _lastAutoLaunch >= autoLaunchDuration) {
@@ -273,7 +271,6 @@ class FireworkController implements Listenable {
 
   Future<void> _playSound(String fileName) async {
     var soundId = await _loadSound(fileName);
-    await _soundPool.setVolume(soundId: soundId, volume: 50);
     await _soundPool.play(soundId);
   }
 
