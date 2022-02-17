@@ -21,7 +21,6 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
     with SingleTickerProviderStateMixin {
   late final FireworkController _controller = FireworkController(
     vsync: this,
-    radius: 70,
   )
     ..start()
     ..autoLaunchDuration = Duration.zero
@@ -30,21 +29,22 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
 
   void _handleChange() {
     if (widget.controller.state == FireworksHaveRocketControllerState.playing) {
+      setState(() {
+        _isVisible = true;
+      });
       _spawn();
     } else if (widget.controller.state ==
         FireworksHaveRocketControllerState.stopped) {}
   }
 
   void _spawn() {
-    for (int i = 0; i < widget.fireworksNumber; i++) {
-      _controller.spawnRocket(
-        Point(
-          _random.nextDouble() * _controller.windowSize.width,
-          _random.nextDouble() * _controller.windowSize.height,
-        ),
-        forceSpawn: true,
-      );
-    }
+    _controller.spawnRocket(
+      Point(
+        _random.nextDouble() * _controller.windowSize.width,
+        _random.nextDouble() * _controller.windowSize.height,
+      ),
+      forceSpawn: true,
+    );
   }
 
   @override
@@ -60,12 +60,17 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
     super.dispose();
   }
 
+  bool _isVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Fireworks(controller: _controller),
         widget.child,
+        Visibility(
+          child: Fireworks(controller: _controller),
+          visible: _isVisible,
+        ),
       ],
     );
   }

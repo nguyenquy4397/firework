@@ -84,6 +84,10 @@ class FireworkController implements Listenable {
     _ticker = vsync.createTicker(_update)..start();
   }
 
+  void stop() {
+    _ticker.stop();
+  }
+
   final List<VoidCallback> _listeners;
   final Soundpool _soundPool = Soundpool.fromOptions();
 
@@ -148,6 +152,7 @@ class FireworkController implements Listenable {
       // We need to wait until we have the size.
       return;
     }
+    print('update');
     _nextGlobalHue();
     if (autoLaunchDuration != Duration.zero &&
         elapsedDuration - _lastAutoLaunch >= autoLaunchDuration) {
@@ -185,8 +190,8 @@ class FireworkController implements Listenable {
     rockets.removeWhere((element) {
       final targetReached = element.distanceTraveled >= element.targetDistance;
       if (!targetReached) return false;
-
       // We want to create an explosion when a rocket reaches its target.
+      //_playSound('packages/firework/assets/exploding.mp3');
       _createExplosion(element);
       return targetReached;
     });
@@ -233,11 +238,9 @@ class FireworkController implements Listenable {
 
     if (forceSpawn) {
       rockets.add(rocket);
-      _playSound('packages/firework/assets/rocket.mp3');
       return;
     }
     _rocketToSpawn = rocket;
-    _playSound('packages/firework/assets/rocket.mp3');
   }
 
   /// How many particles will be spawned when a rocket explodes.
@@ -253,7 +256,6 @@ class FireworkController implements Listenable {
         size: particleSize,
       ));
     }
-    _playSound('packages/firework/assets/exploding.mp3');
   }
 
   void spawnExplosion(Point<double> target) {
@@ -266,7 +268,6 @@ class FireworkController implements Listenable {
         size: particleSize,
       ));
     }
-    _playSound('packages/firework/assets/exploding.mp3');
   }
 
   Future<void> _playSound(String fileName) async {

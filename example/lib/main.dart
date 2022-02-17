@@ -41,41 +41,46 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: FireworksHaveRocket(
-        controller: _controller,
-        fireworksNumber: 4,
-        child: Column(
+      body: Scaffold(
+        body: Row(
           children: [
-            Expanded(
-              child: ListView(
-                children: List.generate(
-                    20,
-                    (index) => const ListTile(
-                            title: Text(
-                          'longgggggggggggggggggggggggggggggggggg',
-                          style: TextStyle(color: Colors.black),
-                        ))),
+            const SizedBox(
+              width: 50,
+              child: Scaffold(
+                backgroundColor: Colors.black,
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _controller.play();
-                  },
-                  icon: const Icon(
-                    Icons.launch,
-                    color: Colors.black,
+            Expanded(
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                body: FireworksHaveRocket(
+                  controller: _controller,
+                  fireworksNumber: 4,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView(
+                          children: List.generate(
+                            20,
+                            (index) => const ListTile(
+                              title: Text(
+                                'longgggggggggggggggg',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _controller.play();
+                        },
+                        child: const Text('fire'),
+                      ),
+                    ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    _noRocketController.play();
-                  },
-                  icon: const Icon(Icons.stream),
-                ),
-              ],
+              ),
             ),
           ],
         ),
