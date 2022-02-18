@@ -57,7 +57,6 @@ class RenderFireworks extends RenderBox {
   @override
   void performResize() {
     super.performResize();
-
     controller.windowSize = size;
   }
 

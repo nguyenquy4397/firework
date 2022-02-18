@@ -90,6 +90,7 @@ class FireworkController implements Listenable {
 
   final List<VoidCallback> _listeners;
   final Soundpool _soundPool = Soundpool.fromOptions();
+  ValueNotifier<bool> isStop = ValueNotifier(true);
 
   @override
   void addListener(listener) {
@@ -152,7 +153,7 @@ class FireworkController implements Listenable {
       // We need to wait until we have the size.
       return;
     }
-    print('update');
+    //print('update');
     _nextGlobalHue();
     if (autoLaunchDuration != Duration.zero &&
         elapsedDuration - _lastAutoLaunch >= autoLaunchDuration) {
@@ -191,7 +192,7 @@ class FireworkController implements Listenable {
       final targetReached = element.distanceTraveled >= element.targetDistance;
       if (!targetReached) return false;
       // We want to create an explosion when a rocket reaches its target.
-      //_playSound('packages/firework/assets/exploding.mp3');
+      // _playSound('packages/firework/assets/exploding.mp3');
       _createExplosion(element);
       return targetReached;
     });
@@ -199,6 +200,12 @@ class FireworkController implements Listenable {
     if (radius != 0) {
       particles.removeWhere((element) =>
           element.position.distanceTo(element.sourcePoint) > radius);
+    }
+
+    if (particles.isNotEmpty || rockets.isNotEmpty) {
+      isStop.value = false;
+    } else {
+      isStop.value = true;
     }
 
     // Notify listeners.

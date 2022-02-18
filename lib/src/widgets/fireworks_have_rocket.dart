@@ -9,10 +9,12 @@ class FireworksHaveRocket extends StatefulWidget {
     required this.controller,
     required this.child,
     required this.fireworksNumber,
+    this.size,
   }) : super(key: key);
   final FireworksHaveRocketController controller;
   final int fireworksNumber;
   final Widget child;
+  final Size? size;
   @override
   _FireworksHaveRocketState createState() => _FireworksHaveRocketState();
 }
@@ -23,9 +25,9 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
     vsync: this,
   )
     ..start()
+    ..windowSize = widget.size ?? Size.zero
     ..autoLaunchDuration = Duration.zero
     ..rocketSpawnTimeout = Duration.zero;
-  final _random = Random();
 
   void _handleChange() {
     if (widget.controller.state == FireworksHaveRocketControllerState.playing) {
@@ -34,17 +36,23 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
       });
       _spawn();
     } else if (widget.controller.state ==
-        FireworksHaveRocketControllerState.stopped) {}
+        FireworksHaveRocketControllerState.stopped) {
+      setState(() {
+        _isVisible = false;
+      });
+    }
   }
 
   void _spawn() {
-    _controller.spawnRocket(
-      Point(
-        _random.nextDouble() * _controller.windowSize.width,
-        _random.nextDouble() * _controller.windowSize.height,
-      ),
-      forceSpawn: true,
-    );
+    final _random = Random();
+    for (int i = 0; i < widget.fireworksNumber; i++) {
+      var x = _random.nextDouble() * _controller.windowSize.width;
+      var y = _random.nextDouble() * _controller.windowSize.height;
+      _controller.spawnRocket(
+        Point(x, y),
+        forceSpawn: true,
+      );
+    }
   }
 
   @override
@@ -67,9 +75,25 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
     return Stack(
       children: [
         widget.child,
-        Visibility(
-          child: Fireworks(controller: _controller),
-          visible: _isVisible,
+        ValueListenableBuilder<bool>(
+          valueListenable: _controller.isStop,
+          builder: (context, value, _) => Visibility(
+            child: Fireworks(controller: _controller),
+            visible: _isVisible && !value,
+          ),
+        ),
+        ValueListenableBuilder<bool>(
+          valueListenable: _controller.isStop,
+          builder: (context, value, _) => Visibility(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isVisible = false;
+                });
+              },
+            ),
+            visible: _isVisible && !value,
+          ),
         ),
       ],
     );
