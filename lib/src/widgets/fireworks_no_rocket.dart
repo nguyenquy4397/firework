@@ -7,12 +7,10 @@ class FireworksNoRocket extends StatefulWidget {
   const FireworksNoRocket({
     Key? key,
     required this.controller,
-    required this.child,
     required this.fireworksNumber,
   }) : super(key: key);
-  final FireworksNoRocketController controller;
+  final FireworkBackgroundController controller;
   final int fireworksNumber;
-  final Widget child;
   @override
   _FireworksNoRocketState createState() => _FireworksNoRocketState();
 }
@@ -29,10 +27,9 @@ class _FireworksNoRocketState extends State<FireworksNoRocket>
   final _random = Random();
 
   void _handleChange() {
-    if (widget.controller.state == FireworksNoRocketControllerState.playing) {
+    if (widget.controller.state == FireworkBackgroundState.playing) {
       _spawn();
-    } else if (widget.controller.state ==
-        FireworksNoRocketControllerState.stopped) {}
+    } else if (widget.controller.state == FireworkBackgroundState.stopped) {}
   }
 
   void _spawn() {
@@ -61,29 +58,6 @@ class _FireworksNoRocketState extends State<FireworksNoRocket>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Fireworks(controller: _controller),
-        widget.child,
-      ],
-    );
+    return Fireworks(controller: _controller);
   }
 }
-
-class FireworksNoRocketController extends ChangeNotifier {
-  FireworksNoRocketControllerState _state =
-      FireworksNoRocketControllerState.stopped;
-  FireworksNoRocketControllerState get state => _state;
-
-  void play() {
-    _state = FireworksNoRocketControllerState.playing;
-    notifyListeners();
-  }
-
-  void stop() {
-    _state = FireworksNoRocketControllerState.stopped;
-    notifyListeners();
-  }
-}
-
-enum FireworksNoRocketControllerState { playing, stopped }

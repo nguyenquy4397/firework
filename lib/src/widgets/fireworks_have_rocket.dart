@@ -7,13 +7,11 @@ class FireworksHaveRocket extends StatefulWidget {
   const FireworksHaveRocket({
     Key? key,
     required this.controller,
-    required this.child,
     required this.fireworksNumber,
     this.size,
   }) : super(key: key);
-  final FireworksHaveRocketController controller;
+  final FireworkBackgroundController controller;
   final int fireworksNumber;
-  final Widget child;
   final Size? size;
   @override
   _FireworksHaveRocketState createState() => _FireworksHaveRocketState();
@@ -30,16 +28,10 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
     ..rocketSpawnTimeout = Duration.zero;
 
   void _handleChange() {
-    if (widget.controller.state == FireworksHaveRocketControllerState.playing) {
-      setState(() {
-        _isVisible = true;
-      });
+    if (widget.controller.state == FireworkBackgroundState.playing) {
       _spawn();
-    } else if (widget.controller.state ==
-        FireworksHaveRocketControllerState.stopped) {
-      setState(() {
-        _isVisible = false;
-      });
+    } else if (widget.controller.state == FireworkBackgroundState.stopped) {
+      _controller.stop();
     }
   }
 
@@ -72,47 +64,24 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.child,
-        ValueListenableBuilder<bool>(
-          valueListenable: _controller.isStop,
-          builder: (context, value, _) => Visibility(
-            child: Fireworks(controller: _controller),
-            visible: _isVisible && !value,
-          ),
-        ),
-        ValueListenableBuilder<bool>(
-          valueListenable: _controller.isStop,
-          builder: (context, value, _) => Visibility(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isVisible = false;
-                });
-              },
-            ),
-            visible: _isVisible && !value,
-          ),
-        ),
-      ],
+    return Fireworks(
+      controller: _controller,
     );
   }
 }
 
-class FireworksHaveRocketController extends ChangeNotifier {
-  FireworksHaveRocketControllerState _state =
-      FireworksHaveRocketControllerState.stopped;
-  FireworksHaveRocketControllerState get state => _state;
+class FireworkBackgroundController extends ChangeNotifier {
+  FireworkBackgroundState _state = FireworkBackgroundState.stopped;
+  FireworkBackgroundState get state => _state;
   void play() {
-    _state = FireworksHaveRocketControllerState.playing;
+    _state = FireworkBackgroundState.playing;
     notifyListeners();
   }
 
   void stop() {
-    _state = FireworksHaveRocketControllerState.stopped;
+    _state = FireworkBackgroundState.stopped;
     notifyListeners();
   }
 }
 
-enum FireworksHaveRocketControllerState { playing, stopped }
+enum FireworkBackgroundState { playing, stopped }

@@ -32,8 +32,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _controller = FireworksHaveRocketController();
-  final _noRocketController = FireworksNoRocketController();
+  final _controller = FireworkBackgroundController();
+  final _noRocketController = FireworkBackgroundController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,49 +41,47 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Scaffold(
-        body: Row(
-          children: [
-            const SizedBox(
-              width: 50,
-              child: Scaffold(
-                backgroundColor: Colors.black,
-              ),
+      body: Row(
+        children: [
+          const SizedBox(
+            width: 50,
+            child: Scaffold(
+              backgroundColor: Colors.black,
             ),
-            Expanded(
-              child: Scaffold(
-                backgroundColor: Colors.white,
-                body: FireworksHaveRocket(
-                  controller: _controller,
-                  fireworksNumber: 4,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView(
-                          children: List.generate(
-                            20,
-                            (index) => const ListTile(
-                              title: Text(
-                                'longgggggggggggggggg',
-                                style: TextStyle(color: Colors.black),
-                              ),
+          ),
+          Expanded(
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: FireworksBackground(
+                controller: _controller,
+                fireworksNumber: 4,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        children: List.generate(
+                          20,
+                          (index) => const ListTile(
+                            title: Text(
+                              'longgggggggggggggggg',
+                              style: TextStyle(color: Colors.black),
                             ),
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _controller.play();
-                        },
-                        child: const Text('fire'),
-                      ),
-                    ],
-                  ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _controller.play();
+                      },
+                      child: const Text('fire'),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
