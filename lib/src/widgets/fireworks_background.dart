@@ -23,18 +23,16 @@ class FireworksBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GestureDetector(
-          child: hasRocket
-              ? FireworksHaveRocket(
-                  controller: controller,
-                  fireworksNumber: fireworksNumber,
-                  size: size,
-                )
-              : FireworksNoRocket(
-                  controller: controller,
-                  fireworksNumber: fireworksNumber,
-                ),
-        ),
+        hasRocket
+            ? FireworksHaveRocket(
+                controller: controller,
+                fireworksNumber: fireworksNumber,
+                size: size,
+              )
+            : FireworksNoRocket(
+                controller: controller,
+                fireworksNumber: fireworksNumber,
+              ),
         child,
       ],
     );

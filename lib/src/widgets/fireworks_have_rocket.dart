@@ -51,6 +51,9 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
   void initState() {
     super.initState();
     widget.controller.addListener(_handleChange);
+    _controller.addListener(() {
+      if (_controller.isStop.value) {}
+    });
   }
 
   @override
@@ -59,8 +62,6 @@ class _FireworksHaveRocketState extends State<FireworksHaveRocket>
     _controller.dispose();
     super.dispose();
   }
-
-  bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) {
